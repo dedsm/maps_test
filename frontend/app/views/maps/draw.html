@@ -1,1 +1,15 @@
-<p>This is the maps/draw view.</p>
+<ui-gmap-google-map id="map"
+     center="map.center"
+     pan="map.pan"
+     zoom="map.zoom"
+     draggable="true"
+     refresh="map.refresh"
+     options="map.options"
+     events="map.events"
+     bounds="map.bounds">
+
+        <ui-gmap-map-control template="views/maps/_draw.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
+        <ui-gmap-map-control template="views/maps/_clear.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
+
+        <ui-gmap-free-draw-polygons polygons="map.polys" draw="map.draw" ></ui-gmap-free-draw-polygons>
+</ui-gmap-google-map>

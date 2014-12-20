@@ -19,10 +19,17 @@ mozioApp.config([
   '$stateProvider',
   '$urlRouterProvider',
   '$locationProvider',
+  'uiGmapGoogleMapApiProvider',
   'API_PREFIX',
-  function ($stateProvider, $urlRouterProvider, $locationProvider, API_PREFIX){
+  function ($stateProvider, $urlRouterProvider, $locationProvider, uiGmapGoogleMapApiProvider, API_PREFIX){
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
+
+    uiGmapGoogleMapApiProvider.configure({
+      v: '3.18',
+      libraries: 'drawing',
+      key: 'AIzaSyCUePHOUZ_pB5pL-r8Oy6aBQYdzgstz2Ds'
+    });
 
     $stateProvider.state('maps', {
       url: '/',
@@ -39,4 +46,5 @@ mozioApp.config([
       templateUrl: '/views/maps/query.html',
       controller: 'MapsQueryController'
     });
+
 }]);
