@@ -1,1 +1,28 @@
-<p>This is the maps/query view.</p>
+<div class="page-header">
+  <h2>
+    Query service areas
+  </h2>
+</div>
+
+<div>
+  <ui-gmap-google-map id="map"
+       center="map.center"
+       pan="map.pan"
+       zoom="map.zoom"
+       draggable="true"
+       refresh="map.refresh"
+       options="map.options"
+       events="mapsEventHandler"
+       clickable="false"
+       bounds="map.bounds">
+
+      <ui-gmap-polygon 
+          ng-repeat="p in areas track by p.id" 
+          path="p.poly" 
+          fill="{'color': 'CCC', 'opacity': 0.3}" 
+          stroke="{'color': 'CCC', 'opacity': 0.3, 'weight': 3}" 
+          events="serviceEventHandler"
+          visible="true">
+      </ui-gmap-polygon>
+  </ui-gmap-google-map>
+</div>
