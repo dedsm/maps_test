@@ -15,12 +15,12 @@
        events="map.events"
        bounds="map.bounds">
 
-          <ui-gmap-map-control template="views/maps/_draw.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
-          <ui-gmap-map-control template="views/maps/_clear.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
-
           <ui-gmap-free-draw-polygons polygons="map.polys" draw="map.draw" ></ui-gmap-free-draw-polygons>
   </ui-gmap-google-map>
 </div>
+
+<button class="btn btn-default" ng-disabled="map.polys.length>0" ng-click="draw()">Draw new service area</button>
+<button class="btn btn-default" ng-click="clear()">Clear map</button>
 
 <div class="panel panel-default">
   <div class="panel-heading">

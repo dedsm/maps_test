@@ -9,51 +9,11 @@
  */
 var mozioApp = angular.module('mozioApp');
 
-mozioApp.factory('channel', function(){
-  return function () {
-    var callbacks = [];
-    this.add = function (cb) {
-      callbacks.push(cb);
-    };
-    this.invoke = function () {
-      callbacks.forEach(function (cb) {
-        cb();
-      });
-    };
-    return this;
-  };
-});
-
-mozioApp.service('drawChannel', ['channel', function(channel){
-  return new channel();
-}]);
-
-mozioApp.service('clearChannel', ['channel', function(channel){
-  return new channel();
-}]);
-
-mozioApp.controller('mapWidgetCtrl', ['$scope', 'drawChannel','clearChannel', function ($scope, drawChannel, clearChannel) {
-  $scope.drawWidget = {
-    controlText: 'draw',
-    controlClick: function () {
-      drawChannel.invoke()
-    }
-  };
-  $scope.clearWidget = {
-    controlText: 'clear',
-    controlClick: function () {
-      clearChannel.invoke()
-    }
-  };
-}]);
-
 mozioApp.controller('MapsDrawController', [
   '$scope',
   'uiGmapGoogleMapApi',
-  'drawChannel',
-  'clearChannel',
   'Area',
-  function ($scope, uiGmapGoogleMapApi, drawChannel, clearChannel, Area) {
+  function ($scope, uiGmapGoogleMapApi, Area) {
     uiGmapGoogleMapApi.then(function(maps){
       $scope.map = {
         center: {
@@ -74,15 +34,13 @@ mozioApp.controller('MapsDrawController', [
 
       $scope.newArea = Area.$build();
       
-      var clear = function(){
+      $scope.clear = function(){
         $scope.map.polys = [];
       };
-      var draw = function(){
+
+      $scope.draw = function(){
         $scope.map.draw();//should be defined by now
       };
-      //add beginDraw as a subscriber to be invoked by the channel, allows controller to controller coms
-      drawChannel.add(draw);
-      clearChannel.add(clear);
 
       $scope.$watchCollection('map.polys', function(polys){
         if (polys.length == 0) {
@@ -105,7 +63,7 @@ mozioApp.controller('MapsDrawController', [
       $scope.saveArea = function(){
         $scope.newArea.$save().$then(function(){
           $scope.newArea = Area.$build();
-          clear();
+          $scope.clear();
         });
       };
     });
