@@ -1,15 +1,78 @@
-<ui-gmap-google-map id="map"
-     center="map.center"
-     pan="map.pan"
-     zoom="map.zoom"
-     draggable="true"
-     refresh="map.refresh"
-     options="map.options"
-     events="map.events"
-     bounds="map.bounds">
+<div class="page-header">
+  <h2>
+    Draw service areas
+  </h2>
+</div>
 
-        <ui-gmap-map-control template="views/maps/_draw.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
-        <ui-gmap-map-control template="views/maps/_clear.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
+<div>
+  <ui-gmap-google-map id="map"
+       center="map.center"
+       pan="map.pan"
+       zoom="map.zoom"
+       draggable="true"
+       refresh="map.refresh"
+       options="map.options"
+       events="map.events"
+       bounds="map.bounds">
 
-        <ui-gmap-free-draw-polygons polygons="map.polys" draw="map.draw" ></ui-gmap-free-draw-polygons>
-</ui-gmap-google-map>
+          <ui-gmap-map-control template="views/maps/_draw.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
+          <ui-gmap-map-control template="views/maps/_clear.html" position="top-right" index="1" controller="mapWidgetCtrl"></ui-gmap-map-control>
+
+          <ui-gmap-free-draw-polygons polygons="map.polys" draw="map.draw" ></ui-gmap-free-draw-polygons>
+  </ui-gmap-google-map>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      <h3>
+        Drawn service area properties
+      </h3>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <h4 ng-click="collapseCoords = !collapseCoords" ng-init="collapseCoords=true" style="cursor: pointer">Service area coordinates (click to show)</h4>
+          </div>
+        </div>
+        <div class="panel-body" collapse="collapseCoords">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Latitude</th>
+                <th>Longitude</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="point in map.polys[0].getPath().getArray()" >
+                <td>{{point.lat()}}</td>
+                <td>{{point.lng()}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <h4>Additional data</h4>
+          </div>
+        </div>
+        <div class="panel-body">
+          <form role="form" ng-submit="saveArea()">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">Name</div>
+                <input class="form-control" type="text" ng-model="newArea.name" placeholder="Name">
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Save Service Area</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

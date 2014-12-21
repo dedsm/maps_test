@@ -52,7 +52,8 @@ mozioApp.controller('MapsDrawController', [
   'uiGmapGoogleMapApi',
   'drawChannel',
   'clearChannel',
-  function ($scope, uiGmapGoogleMapApi, drawChannel, clearChannel) {
+  'Area',
+  function ($scope, uiGmapGoogleMapApi, drawChannel, clearChannel, Area) {
     uiGmapGoogleMapApi.then(function(maps){
       $scope.map = {
         center: {
@@ -70,6 +71,9 @@ mozioApp.controller('MapsDrawController', [
         polys: [],
         draw: undefined
       };
+
+      $scope.newArea = Area.$build();
+      
       var clear = function(){
         $scope.map.polys = [];
       };
@@ -80,10 +84,29 @@ mozioApp.controller('MapsDrawController', [
       drawChannel.add(draw);
       clearChannel.add(clear);
 
-      $scope.$watchCollection('map.polys', function(newValues){
-        console.log("polys changed");
+      $scope.$watchCollection('map.polys', function(polys){
+        if (polys.length == 0) {
+          $scope.newArea.poly = null;
+          return;
+        }
+        var polygon = {'type': 'Polygon', 'coordinates': []};
+        var coords = [];
+        var poly_coords = polys[0].getPath().getArray();
+        for (var i=0; i != poly_coords.length; i++){
+          coords.push([poly_coords[i].lng(), poly_coords[i].lat()]);
+        }
+        coords.push([poly_coords[0].lng(), poly_coords[0].lat()]);
+
+        polygon.coordinates = [coords];
+
+        $scope.newArea.poly = polygon;
       });
 
-      window.scope = $scope;
+      $scope.saveArea = function(){
+        $scope.newArea.$save().$then(function(){
+          $scope.newArea = Area.$build();
+          clear();
+        });
+      };
     });
 }]);

@@ -10,6 +10,8 @@
  */
 var mozioApp = angular.module('mozioApp', [
   'ui.router',
+  'restmod',
+  'ui.bootstrap',
   'uiGmapgoogle-maps'
 ]);
 
@@ -20,8 +22,9 @@ mozioApp.config([
   '$urlRouterProvider',
   '$locationProvider',
   'uiGmapGoogleMapApiProvider',
+  'restmodProvider',
   'API_PREFIX',
-  function ($stateProvider, $urlRouterProvider, $locationProvider, uiGmapGoogleMapApiProvider, API_PREFIX){
+  function ($stateProvider, $urlRouterProvider, $locationProvider, uiGmapGoogleMapApiProvider, restmodProvider, API_PREFIX){
     $urlRouterProvider.otherwise('/');
     $locationProvider.html5Mode(true);
 
@@ -29,6 +32,18 @@ mozioApp.config([
       v: '3.18',
       libraries: 'drawing',
       key: 'AIzaSyCUePHOUZ_pB5pL-r8Oy6aBQYdzgstz2Ds'
+    });
+
+    restmodProvider.rebase({
+      $config: { urlPrefix: API_PREFIX }
+    });
+
+    restmodProvider.rebase({
+      $hooks: {
+        'before-request': function (_req) {
+          _req.url += '/';
+        }
+      }
     });
 
     $stateProvider.state('maps', {
@@ -46,5 +61,4 @@ mozioApp.config([
       templateUrl: '/views/maps/query.html',
       controller: 'MapsQueryController'
     });
-
 }]);
