@@ -30,7 +30,7 @@ mozioApp.config([
 
     uiGmapGoogleMapApiProvider.configure({
       v: '3.18',
-      libraries: 'drawing',
+      libraries: 'drawing,places',
       key: 'AIzaSyCUePHOUZ_pB5pL-r8Oy6aBQYdzgstz2Ds'
     });
 

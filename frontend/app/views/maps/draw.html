@@ -16,11 +16,31 @@
        bounds="map.bounds">
 
           <ui-gmap-free-draw-polygons polygons="map.polys" draw="map.draw" ></ui-gmap-free-draw-polygons>
+      <ui-gmap-polygon 
+          ng-repeat="p in areas track by p.id" 
+          path="p.poly" 
+          fill="{'color': 'CCC', 'opacity': 0.3}" 
+          stroke="{'color': 'CCC', 'opacity': 0.3, 'weight': 3}" 
+          events="serviceEventHandler"
+          visible="true">
+      </ui-gmap-polygon>
+      <ui-gmap-search-box template="'/views/maps/_searchbox.html'"
+          events="searchbox.events"u></ui-gmap-search-box>
   </ui-gmap-google-map>
 </div>
 
-<button class="btn btn-default" ng-disabled="map.polys.length>0" ng-click="draw()">Draw new service area</button>
-<button class="btn btn-default" ng-click="clear()">Clear map</button>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="btn-group" role="group">
+      <button class="btn btn-primary" ng-disabled="drawing || map.polys.length>0" ng-click="draw()" ng-switch="drawing">
+        <span ng-switch-default>Draw new service area</span>
+        <span ng-switch-when="true">Drawing</span>
+      </button>
+      <button class="btn btn-danger" ng-disabled="map.polys.length==0" ng-click="clear()">Clear map</button>
+    </div>
+    <div class="checkbox"><label><input type="checkbox" ng-model="showLastAreas">Show last 10 Service Areas</label></div>
+  </div>
+</div>
 
 <div class="panel panel-default">
   <div class="panel-heading">

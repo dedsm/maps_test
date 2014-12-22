@@ -22,15 +22,15 @@ mozioApp.controller('MapsDrawController', [
         },
         pan: true,
         zoom: 14,
-        refresh: false,
         options: {
-          disableDefaultUI: true
         },
         events: {},
         bounds: {},
         polys: [],
         draw: undefined
       };
+
+      $scope.drawing = false;
 
       $scope.newArea = Area.$build();
       
@@ -39,10 +39,49 @@ mozioApp.controller('MapsDrawController', [
       };
 
       $scope.draw = function(){
+        $scope.drawing = true;
+        $scope.showLastAreas = false;
         $scope.map.draw();//should be defined by now
       };
 
+      $scope.$watch('showLastAreas', function(){
+        if ($scope.showLastAreas){
+          $scope.areas = Area.$search({'last': 10});
+        } else {
+          $scope.areas = Area.$collection();
+        }
+      });
+
+      $scope.searchbox = {
+        events: {
+          places_changed: function (searchBox) {
+            var places = searchBox.getPlaces()
+            if (places.length == 0) {
+              return;
+            }
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0, place; place = places[i]; i++) {
+              bounds.extend(place.geometry.location);
+            }
+
+            $scope.map.bounds = {
+              northeast: {
+                latitude: bounds.getNorthEast().lat(),
+                longitude: bounds.getNorthEast().lng()
+              },
+              southwest: {
+                latitude: bounds.getSouthWest().lat(),
+                longitude: bounds.getSouthWest().lng()
+              }
+            }
+
+            $scope.map.zoom = 12;
+          }
+        }
+      };
+
       $scope.$watchCollection('map.polys', function(polys){
+        $scope.drawing = false;
         if (polys.length == 0) {
           $scope.newArea.poly = null;
           return;

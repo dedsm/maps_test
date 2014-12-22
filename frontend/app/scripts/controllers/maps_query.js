@@ -15,11 +15,13 @@ mozioApp.controller('MapsQueryController', [
   'Area',
   function ($scope, uiGmapGoogleMapApi, Area) {
     uiGmapGoogleMapApi.then(function(maps){
+    });
       $scope.map = {
         center: {
           latitude: 53.406754,
           longitude: -2.158843
         },
+        control: {},
         pan: true,
         zoom: 14,
         options: {
@@ -30,6 +32,33 @@ mozioApp.controller('MapsQueryController', [
         draw: undefined
       };
 
+      $scope.searchbox = {
+        events: {
+          places_changed: function (searchBox) {
+            var places = searchBox.getPlaces()
+            if (places.length == 0) {
+              return;
+            }
+            var bounds = new google.maps.LatLngBounds();
+            for (var i = 0, place; place = places[i]; i++) {
+              bounds.extend(place.geometry.location);
+            }
+
+            $scope.map.bounds = {
+              northeast: {
+                latitude: bounds.getNorthEast().lat(),
+                longitude: bounds.getNorthEast().lng()
+              },
+              southwest: {
+                latitude: bounds.getSouthWest().lat(),
+                longitude: bounds.getSouthWest().lng()
+              }
+            }
+
+            $scope.map.zoom = 12;
+          }
+        }
+      };
 
       $scope.serviceEventHandler = {
         'click': function(googlePoly, eventName, ngModel, args){
@@ -49,5 +78,6 @@ mozioApp.controller('MapsQueryController', [
           $scope.areas = Area.$search({'lat': latLng.lat(), 'long': latLng.lng()});
         }
       };
-    });
+
+      window.scope = $scope;
 }]);

@@ -4,25 +4,59 @@
   </h2>
 </div>
 
-<div>
-  <ui-gmap-google-map id="map"
-       center="map.center"
-       pan="map.pan"
-       zoom="map.zoom"
-       draggable="true"
-       refresh="map.refresh"
-       options="map.options"
-       events="mapsEventHandler"
-       clickable="false"
-       bounds="map.bounds">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">Search a location you want serviced, then click on the map to query for service areas</div>
+  </div>
+  <div class="panel-body">
+    <ui-gmap-google-map id="map"
+         center="map.center"
+         pan="map.pan"
+         control="map.control"
+         zoom="map.zoom"
+         draggable="true"
+         refresh="map.refresh"
+         options="map.options"
+         events="mapsEventHandler"
+         clickable="false"
+         bounds="map.bounds">
 
-      <ui-gmap-polygon 
-          ng-repeat="p in areas track by p.id" 
-          path="p.poly" 
-          fill="{'color': 'CCC', 'opacity': 0.3}" 
-          stroke="{'color': 'CCC', 'opacity': 0.3, 'weight': 3}" 
-          events="serviceEventHandler"
-          visible="true">
-      </ui-gmap-polygon>
-  </ui-gmap-google-map>
+        <ui-gmap-search-box template="'/views/maps/_searchbox.html'"
+            events="searchbox.events"u></ui-gmap-search-box>
+        <ui-gmap-polygon 
+            ng-repeat="p in areas track by p.id" 
+            path="p.poly" 
+            fill="{'color': 'CCC', 'opacity': 0.3}" 
+            stroke="{'color': 'CCC', 'opacity': 0.3, 'weight': 3}" 
+            events="serviceEventHandler"
+            visible="true">
+        </ui-gmap-polygon>
+    </ui-gmap-google-map>
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      <h3>
+        Service areas for the location
+      </h3>
+    </div>
+  </div>
+  <div class="panel-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="area in areas">
+          <td>{{area.name}}</td>
+          <td>Do Something</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

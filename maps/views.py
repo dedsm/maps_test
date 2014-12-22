@@ -12,10 +12,13 @@ class AreaViewSet(viewsets.ModelViewSet):
     def list(self, request):
         latitude = request.GET.get('lat', None)
         longitude = request.GET.get('long', None)
+        last = request.GET.get('last', None)
 
         if latitude and longitude:
             p = Point([float(longitude), float(latitude)])
             queryset = self.queryset.filter(poly__contains=p)
+        elif last:
+            queryset = self.queryset.order_by('-created_at')[:int(last)]
         else:
             queryset = self.queryset.none()
 
