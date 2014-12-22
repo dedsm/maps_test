@@ -13,7 +13,8 @@ mozioApp.controller('MapsQueryController', [
   '$scope',
   'uiGmapGoogleMapApi',
   'Area',
-  function ($scope, uiGmapGoogleMapApi, Area) {
+  'MessageUtils',
+  function ($scope, uiGmapGoogleMapApi, Area, Message) {
     uiGmapGoogleMapApi.then(function(maps){
     });
       $scope.map = {
@@ -74,8 +75,15 @@ mozioApp.controller('MapsQueryController', [
       $scope.mapsEventHandler = {
         'click': function(maps, eventName, args){
           var latLng = args[0].latLng;
-
-          $scope.areas = Area.$search({'lat': latLng.lat(), 'long': latLng.lng()});
+          $scope.areas = Area.$search({'lat': latLng.lat(), 'long': latLng.lng()})
+            .$then(function(){
+              if ($scope.areas.length == 0){
+                Message.error('Could not find any service area for that location');
+              } else {
+                Message.success('Found ' + $scope.areas.length + ' service areas for that location');
+              }
+            });
+          Message.info(null, "Searching for service areas in that location");
         }
       };
 

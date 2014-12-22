@@ -13,7 +13,8 @@ mozioApp.controller('MapsDrawController', [
   '$scope',
   'uiGmapGoogleMapApi',
   'Area',
-  function ($scope, uiGmapGoogleMapApi, Area) {
+  'MessageUtils',
+  function ($scope, uiGmapGoogleMapApi, Area, Message) {
     uiGmapGoogleMapApi.then(function(maps){
       $scope.map = {
         center: {
@@ -41,12 +42,13 @@ mozioApp.controller('MapsDrawController', [
       $scope.draw = function(){
         $scope.drawing = true;
         $scope.showLastAreas = false;
-        $scope.map.draw();//should be defined by now
+        $scope.map.draw();
       };
 
       $scope.$watch('showLastAreas', function(){
         if ($scope.showLastAreas){
           $scope.areas = Area.$search({'last': 10});
+          Message.info(null, 'Searching last service areas added');
         } else {
           $scope.areas = Area.$collection();
         }
@@ -103,6 +105,7 @@ mozioApp.controller('MapsDrawController', [
         $scope.newArea.$save().$then(function(){
           $scope.newArea = Area.$build();
           $scope.clear();
+          Message.success('Service area saved');
         });
       };
     });

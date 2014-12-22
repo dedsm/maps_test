@@ -12,6 +12,8 @@ var mozioApp = angular.module('mozioApp', [
   'ui.router',
   'restmod',
   'ui.bootstrap',
+  'utilServices',
+  'toaster',
   'uiGmapgoogle-maps'
 ]);
 
