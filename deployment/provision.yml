@@ -43,7 +43,7 @@
     notify: restart nginx
 
   - name: Install init scripts.
-    copy: src=files/init/{{ item }}.conf dest=/etc/init/{{ project_name }}_{{ item }}.conf
+    copy: src=files/init/{{ item }}.conf dest=/etc/init/{{ item }}.conf
     with_items: "{{ initfiles }}"
 
   - name: Install pg_hba.conf.
@@ -74,5 +74,5 @@
 
   tasks:
   - name: Restart services.
-    service: name={{ project_name }}_mozio state=restarted
+    service: name={{ project_name }} state=restarted
 
