@@ -1,0 +1,5 @@
+[servers:children]
+production
+
+[production]
+mozio nickname=production vm=0 branch=master

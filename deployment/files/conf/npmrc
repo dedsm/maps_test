@@ -1,0 +1,4 @@
+root = /var/projects/mozio/home/.nodejs/lib/node_modules
+binroot = /var/projects/mozio/home/.nodejs/bin
+manroot = /var/projects/mozio/home/.nodejs/share/man
+prefix = /var/projects/mozio/home/.nodejs

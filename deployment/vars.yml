@@ -1,0 +1,17 @@
+---
+project_name: mozio
+project_root: /var/projects/mozio
+project_repo: git@github.com:dedsm/maps_test.git
+system_packages:
+  - build-essential
+  - git
+  - nginx
+  - postgresql
+  - postgresql-server-dev-all
+  - python-dev
+  - python-setuptools
+  - postgis
+  - postgresql-9.3-postgis-2.1
+python_packages:
+  - pip
+  - virtualenv

@@ -1,0 +1,41 @@
+---
+- hosts: servers
+  vars_files:
+    - vars.yml
+  gather_facts: false
+  sudo: true
+  sudo_user: mozio
+
+  tasks:
+  - name: Pull sources from the repository.
+    git: repo={{ project_repo }} dest={{ project_root }}/code/ version={{ branch }}
+
+  - name: Upgrade the virtualenv.
+    pip: requirements={{ project_root }}/code/requirements.txt virtualenv={{ project_root }}/env/
+
+  - name: Sync Django database.
+    shell: "{{ project_root }}/env/bin/python {{ project_root }}/code/manage.py migrate"
+
+  - name: Install bower
+    shell: npm install -g bower
+
+  - name: Install grunt
+    shell: npm install -g grunt-cli
+
+  - name: Run npm install
+    shell: npm install
+    args: 
+      chdir: "{{ project_root }}/code/frontend"
+
+  - name: Run bower install
+    shell: ~/.nodejs/bin/bower install 
+    args: 
+      chdir: "{{ project_root }}/code/frontend"
+
+  - name: Run grunt build
+    shell: ~/.nodejs/bin/grunt build 
+    args: 
+      chdir: "{{ project_root }}/code/frontend"
+
+  handlers:
+    - include: handlers.yml
