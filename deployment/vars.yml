@@ -15,3 +15,7 @@ system_packages:
 python_packages:
   - pip
   - virtualenv
+initfiles:
+  - mozio
+  - mozio-web
+  - mozio-web-1
