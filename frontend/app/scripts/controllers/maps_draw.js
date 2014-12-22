@@ -47,6 +47,7 @@ mozioApp.controller('MapsDrawController', [
 
       $scope.$watch('showLastAreas', function(){
         if ($scope.showLastAreas){
+          // Search last 10 service areas, no caching in case of concurrent users
           $scope.areas = Area.$search({'last': 10});
           Message.info(null, 'Searching last service areas added');
         } else {
@@ -57,6 +58,7 @@ mozioApp.controller('MapsDrawController', [
       $scope.searchbox = {
         events: {
           places_changed: function (searchBox) {
+            // Center the map in the location(s) if it's valid
             var places = searchBox.getPlaces()
             if (places.length == 0) {
               return;
@@ -83,11 +85,22 @@ mozioApp.controller('MapsDrawController', [
       };
 
       $scope.$watchCollection('map.polys', function(polys){
+        /*
+         * After the draw is finished, map.polys will be updated,
+         * if it's length > 0, it means there's a polygon in the map
+         * else it means the user cleared the map.
+         */
         $scope.drawing = false;
         if (polys.length == 0) {
           $scope.newArea.poly = null;
           return;
         }
+
+        /*
+         * Next we'll create a GEOJson representation of the polygon,
+         * after that we'll set the structure to the newArea.
+         */
+
         var polygon = {'type': 'Polygon', 'coordinates': []};
         var coords = [];
         var poly_coords = polys[0].getPath().getArray();

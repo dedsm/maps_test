@@ -37,13 +37,13 @@ mozioApp.config([
     });
 
     restmodProvider.rebase({
-      $config: { urlPrefix: API_PREFIX }
+      $config: { urlPrefix: API_PREFIX } // All restmod queries will begin with /api/v1
     });
 
     restmodProvider.rebase({
       $hooks: {
         'before-request': function (_req) {
-          _req.url += '/';
+          _req.url += '/'; // Append / to the end of each restmod query, djangoifying
         }
       }
     });

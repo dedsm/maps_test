@@ -36,6 +36,7 @@ mozioApp.controller('MapsQueryController', [
       $scope.searchbox = {
         events: {
           places_changed: function (searchBox) {
+            // Center the map in the location if it's valid, DRY, I know
             var places = searchBox.getPlaces()
             if (places.length == 0) {
               return;
@@ -62,8 +63,12 @@ mozioApp.controller('MapsQueryController', [
       };
 
       $scope.serviceEventHandler = {
+        /*
+         * If the user clicks on a polygon, we need to propagate it to the map
+         */
         'click': function(googlePoly, eventName, ngModel, args){
           if (args[0]._alreadyCalled){
+            // Don't ask me why, but google sends the event twice
             return
           }
           args[0]._alreadyCalled = true;
@@ -74,6 +79,10 @@ mozioApp.controller('MapsQueryController', [
 
       $scope.mapsEventHandler = {
         'click': function(maps, eventName, args){
+          /*
+           * On map click, trigger the backend call to search for service areas for the clicked
+           * location
+           */
           var latLng = args[0].latLng;
           $scope.areas = Area.$search({'lat': latLng.lat(), 'long': latLng.lng()})
             .$then(function(){
